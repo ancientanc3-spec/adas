@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Search, CheckCircle, XCircle, ExternalLink, Calendar, Building2, User, Loader2, Lock, CreditCard, Wallet } from 'lucide-react';
+import {
+  Search,
+  CheckCircle,
+  XCircle,
+  ExternalLink,
+  Calendar,
+  Building2,
+  User,
+  Loader2,
+  Lock,
+  CreditCard,
+  Wallet,
+} from 'lucide-react';
 import { Credential } from '../types/credential';
 import { verifyCredential, connectWallet } from '../utils/blockchain';
 import { getIPFSUrl } from '../utils/ipfs';
@@ -86,7 +98,7 @@ export default function VerificationPortal() {
       if (result) {
         setCredential(result);
         if (walletAddress && !hasAccess) {
-          setVerificationCount(prev => prev + 1);
+          setVerificationCount((prev) => prev + 1);
         }
       } else {
         setError('Credential not found or invalid token ID');
@@ -112,25 +124,25 @@ export default function VerificationPortal() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+      <div className="bg-[#141414] border border-[#2A2A2A] rounded-lg shadow-lg p-8 mb-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Verify Academic Credential</h2>
+          <h2 className="text-2xl font-bold text-white">Verify Academic Credential</h2>
           {!walletAddress ? (
             <button
               onClick={handleConnectWallet}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center text-sm"
+              className="px-4 py-2 bg-[#FFC700] text-black rounded-lg font-medium hover:opacity-90 transition-colors flex items-center text-sm"
             >
               <Wallet className="w-4 h-4 mr-2" />
               Connect Wallet
             </button>
           ) : !hasAccess && (
             <div className="text-right">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#BFBFBF]">
                 Free verifications: {3 - verificationCount} / 3
               </p>
               <button
                 onClick={() => setShowPricing(true)}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                className="text-sm text-[#FFC700] hover:opacity-90 font-medium"
               >
                 Upgrade for unlimited
               </button>
@@ -139,17 +151,18 @@ export default function VerificationPortal() {
         </div>
 
         {walletAddress && !hasAccess && verificationCount >= 3 && (
-          <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="mb-4 p-4 bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg">
             <div className="flex items-start">
-              <Lock className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+              <Lock className="w-5 h-5 text-[#FFC700] mt-0.5 mr-3 flex-shrink-0" />
               <div>
-                <p className="text-sm font-semibold text-yellow-900">Free limit reached</p>
-                <p className="text-sm text-yellow-700 mt-1">
-                  Subscribe to continue verifying credentials. Use code <span className="font-mono font-semibold">TRINETRA</span> for free access.
+                <p className="text-sm font-semibold text-white">Free limit reached</p>
+                <p className="text-sm text-[#BFBFBF] mt-1">
+                  Subscribe to continue verifying credentials. Use code{' '}
+                  <span className="font-mono font-semibold text-[#FFC700]">TRINETRA</span> for free access.
                 </p>
                 <button
                   onClick={() => setShowPricing(true)}
-                  className="mt-2 text-sm text-yellow-900 hover:text-yellow-800 font-medium underline"
+                  className="mt-2 text-sm text-[#FFC700] hover:opacity-90 font-medium underline"
                 >
                   View pricing plans
                 </button>
@@ -164,13 +177,13 @@ export default function VerificationPortal() {
             value={tokenId}
             onChange={(e) => setTokenId(e.target.value)}
             placeholder="Enter Token ID or scan QR code"
-            className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="flex-1 px-4 py-3 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:ring-2 focus:ring-[#FFC700] focus:border-transparent"
             onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
           />
           <button
             onClick={() => handleVerify()}
             disabled={loading}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+            className="bg-[#FFC700] text-black px-6 py-3 rounded-lg font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#FFC700] focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -184,20 +197,20 @@ export default function VerificationPortal() {
         </div>
 
         {error && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
-            <XCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mt-4 p-4 bg-[#1A1A1A] border border-red-500/40 rounded-lg flex items-start">
+            <XCircle className="w-5 h-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
+            <p className="text-sm text-red-400">{error}</p>
           </div>
         )}
       </div>
 
       {searched && credential && (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-[#141414] border border-[#2A2A2A] rounded-lg shadow-lg overflow-hidden">
           <div
             className={`p-6 ${
               credential.revoked
-                ? 'bg-gradient-to-br from-red-500 to-red-700'
-                : 'bg-gradient-to-br from-green-500 to-green-700'
+                ? 'bg-gradient-to-br from-red-600 to-red-800'
+                : 'bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A]'
             } text-white`}
           >
             <div className="flex items-center justify-between mb-4">
@@ -205,7 +218,7 @@ export default function VerificationPortal() {
                 {credential.revoked ? (
                   <XCircle className="w-8 h-8 mr-3" />
                 ) : (
-                  <CheckCircle className="w-8 h-8 mr-3" />
+                  <CheckCircle className="w-8 h-8 mr-3 text-[#FFC700]" />
                 )}
                 <h3 className="text-2xl font-bold">
                   {credential.revoked ? 'Credential Revoked' : 'Verified Credential'}
@@ -223,58 +236,58 @@ export default function VerificationPortal() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center text-sm text-gray-500 mb-1">
+                  <div className="flex items-center text-sm text-[#808080] mb-1">
                     <Building2 className="w-4 h-4 mr-2" />
                     Institution
                   </div>
-                  <p className="text-lg font-semibold text-gray-900">{credential.institution}</p>
+                  <p className="text-lg font-semibold text-white">{credential.institution}</p>
                 </div>
 
                 <div>
-                  <div className="flex items-center text-sm text-gray-500 mb-1">
+                  <div className="flex items-center text-sm text-[#808080] mb-1">
                     Degree / Program
                   </div>
-                  <p className="text-lg font-semibold text-gray-900">{credential.degree}</p>
+                  <p className="text-lg font-semibold text-white">{credential.degree}</p>
                 </div>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center text-sm text-gray-500 mb-1">
+                  <div className="flex items-center text-sm text-[#808080] mb-1">
                     <Calendar className="w-4 h-4 mr-2" />
                     Issue Date
                   </div>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-lg font-semibold text-white">
                     {formatDate(credential.issueDate)}
                   </p>
                 </div>
 
                 <div>
-                  <div className="flex items-center text-sm text-gray-500 mb-1">
+                  <div className="flex items-center text-sm text-[#808080] mb-1">
                     <User className="w-4 h-4 mr-2" />
                     Student Address
                   </div>
-                  <p className="text-lg font-semibold text-gray-900 font-mono">
+                  <p className="text-lg font-semibold text-white font-mono">
                     {shortenAddress(credential.student)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-sm font-medium text-gray-700 mb-3">Blockchain Proof</h4>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+            <div className="border-t border-[#2A2A2A] pt-6">
+              <h4 className="text-sm font-medium text-[#BFBFBF] mb-3">Blockchain Proof</h4>
+              <div className="bg-[#0A0A0A] rounded-lg p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Token ID:</span>
-                  <span className="font-mono text-gray-900">{credential.tokenId}</span>
+                  <span className="text-[#808080]">Token ID:</span>
+                  <span className="font-mono text-white">{credential.tokenId}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">IPFS Hash:</span>
+                  <span className="text-[#808080]">IPFS Hash:</span>
                   <a
                     href={getIPFSUrl(credential.ipfsHash)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-mono text-blue-600 hover:text-blue-700 flex items-center"
+                    className="font-mono text-[#FFC700] hover:opacity-90 flex items-center"
                   >
                     {credential.ipfsHash.slice(0, 10)}...
                     <ExternalLink className="w-3 h-3 ml-1" />
@@ -288,7 +301,7 @@ export default function VerificationPortal() {
                 href={getIPFSUrl(credential.ipfsHash)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                className="w-full bg-[#FFC700] text-black py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-colors flex items-center justify-center"
               >
                 <ExternalLink className="w-5 h-5 mr-2" />
                 View Document
@@ -299,10 +312,10 @@ export default function VerificationPortal() {
       )}
 
       {!searched && (
-        <div className="bg-gray-50 rounded-lg p-12 text-center">
-          <Search className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Enter Token ID to Verify</h3>
-          <p className="text-gray-600">
+        <div className="bg-[#141414] border border-[#2A2A2A] rounded-lg p-12 text-center">
+          <Search className="w-16 h-16 text-[#808080] mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">Enter Token ID to Verify</h3>
+          <p className="text-[#BFBFBF]">
             Enter a credential token ID or scan a QR code to verify its authenticity
           </p>
         </div>
