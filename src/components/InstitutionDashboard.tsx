@@ -50,7 +50,6 @@ export default function InstitutionDashboard() {
 
   const checkAccess = async () => {
     if (!walletAddress) return;
-
     setCheckingAccess(true);
     const { hasAccess: access } = await checkUserSubscription(walletAddress, 'institution');
     setHasAccess(access);
@@ -77,16 +76,10 @@ export default function InstitutionDashboard() {
     setError(null);
 
     try {
-      if (!formData.document) {
-        throw new Error('Please upload a document');
-      }
-
-      if (!formData.studentAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
-        throw new Error('Invalid Ethereum address');
-      }
+      if (!formData.document) throw new Error('Please upload a document');
+      if (!formData.studentAddress.match(/^0x[a-fA-F0-9]{40}$/)) throw new Error('Invalid Ethereum address');
 
       const ipfsHash = await uploadToIPFS(formData.document);
-
       const result = await issueCredential(
         formData.studentAddress,
         ipfsHash,
@@ -121,7 +114,6 @@ export default function InstitutionDashboard() {
       if (fileInput) fileInput.value = '';
     } catch (err: any) {
       setError(err.message || 'Failed to issue credential');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -129,9 +121,9 @@ export default function InstitutionDashboard() {
 
   if (checkingAccess) {
     return (
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto bg-black">
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 text-amber-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
         </div>
       </div>
     );
@@ -140,25 +132,21 @@ export default function InstitutionDashboard() {
   if (!hasAccess && walletAddress) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-100 rounded-full mb-4">
-            <Lock className="w-8 h-8 text-amber-600" />
+        <div className="bg-gradient-to-br from-[#111] to-[#0b0b0b] border border-[#1f1f1f] rounded-xl p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-400/10 rounded-full mb-4">
+            <Lock className="w-8 h-8 text-yellow-400" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Subscription Required</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-2xl font-bold text-white mb-4">Subscription Required</h2>
+          <p className="text-gray-400 mb-6">
             To issue credentials, you need an active subscription plan.
-            Choose a plan that fits your institution needs.
           </p>
           <button
             onClick={() => setShowPricing(true)}
-            className="px-6 py-3 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors inline-flex items-center"
+            className="px-6 py-3 bg-yellow-400 text-black rounded-lg font-semibold hover:bg-yellow-300 transition"
           >
-            <CreditCard className="w-5 h-5 mr-2" />
+            <CreditCard className="w-5 h-5 mr-2 inline" />
             View Pricing Plans
           </button>
-          <p className="text-sm text-gray-500 mt-4">
-            Use promo code <span className="font-mono font-semibold">TRINETRA</span> for free access
-          </p>
         </div>
         {showPricing && walletAddress && (
           <PricingModal
@@ -176,266 +164,83 @@ export default function InstitutionDashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto text-white">
       {walletAddress && activeTab === 'issue' && (
         <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Total Issued</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalIssued}</p>
-              </div>
-              <div className="p-3 bg-amber-100 rounded-lg">
-                <Award className="w-6 h-6 text-amber-600" />
-              </div>
+          {[
+            { label: 'Total Issued', value: stats.totalIssued, icon: Award },
+            { label: 'Recent (30 days)', value: stats.recentIssued, icon: TrendingUp },
+            { label: 'Active', value: stats.totalIssued - stats.totalRevoked, icon: Users },
+          ].map((item, i) => (
+            <div key={i} className="bg-gradient-to-br from-[#111] to-[#0b0b0b] border border-[#1f1f1f] rounded-xl p-6">
+              <p className="text-sm text-gray-400 mb-1">{item.label}</p>
+              <p className="text-3xl font-bold text-white">{item.value}</p>
+              <item.icon className="w-6 h-6 text-yellow-400 mt-4" />
             </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Recent (30 days)</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.recentIssued}</p>
-              </div>
-              <div className="p-3 bg-green-100 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Active</p>
-                <p className="text-3xl font-bold text-gray-900">
-                  {stats.totalIssued - stats.totalRevoked}
-                </p>
-              </div>
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Users className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       )}
 
-      <div className="mb-6 flex gap-2 border-b border-gray-200">
-        <button
-          onClick={() => setActiveTab('issue')}
-          className={`px-6 py-3 font-semibold transition-colors ${
-            activeTab === 'issue'
-              ? 'border-b-2 border-amber-600 text-amber-600'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Issue Credential
-        </button>
-
-        <button
-          onClick={() => setActiveTab('students')}
-          className={`px-6 py-3 font-semibold transition-colors flex items-center ${
-            activeTab === 'students'
-              ? 'border-b-2 border-amber-600 text-amber-600'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          <Users className="w-4 h-4 mr-2" />
-          Registered Students
-        </button>
-
-        <button
-          onClick={() => setActiveTab('register')}
-          className={`px-6 py-3 font-semibold transition-colors ${
-            activeTab === 'register'
-              ? 'border-b-2 border-amber-600 text-amber-600'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Authorization Request
-        </button>
+      <div className="mb-6 flex gap-2 border-b border-[#1f1f1f]">
+        {['issue', 'students', 'register'].map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as any)}
+            className={`px-6 py-3 font-semibold ${
+              activeTab === tab
+                ? 'border-b-2 border-yellow-400 text-yellow-400'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            {tab === 'issue' ? 'Issue Credential' : tab === 'students' ? 'Registered Students' : 'Authorization Request'}
+          </button>
+        ))}
       </div>
 
       {activeTab === 'issue' && (
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Issue Academic Credential
-          </h2>
+        <div className="bg-gradient-to-br from-[#111] to-[#0b0b0b] border border-[#1f1f1f] rounded-xl p-8">
+          <h2 className="text-2xl font-bold mb-6">Issue Academic Credential</h2>
 
           {success && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 mr-3" />
-                <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-green-900 mb-1">
-                    Credential Issued Successfully
-                  </h3>
-                  <p className="text-sm text-green-700 mb-2">
-                    Token ID: {success.tokenId}
-                  </p>
-                  <a
-                    href={`https://sepolia.etherscan.io/tx/${success.txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-green-600 hover:text-green-800 underline"
-                  >
-                    View Transaction
-                  </a>
-                </div>
-              </div>
+            <div className="mb-6 p-4 bg-yellow-400/10 border border-yellow-400/30 rounded-lg">
+              <p className="text-yellow-300">Credential Issued. Token ID: {success.tokenId}</p>
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700">{error}</p>
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <p className="text-red-400">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Student Name
-              </label>
+            {['studentName', 'studentAddress', 'institution', 'degree', 'graduationYear'].map(field => (
               <input
+                key={field}
                 type="text"
                 required
-                value={formData.studentName}
-                onChange={(e) =>
-                  setFormData({ ...formData, studentName: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="John Doe"
+                value={(formData as any)[field]}
+                onChange={e => setFormData({ ...formData, [field]: e.target.value })}
+                placeholder={field}
+                className="w-full px-4 py-2 bg-black border border-[#1f1f1f] rounded-lg text-white focus:border-yellow-400 focus:ring-0"
               />
-            </div>
+            ))}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Student Wallet Address
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.studentAddress}
-                onChange={(e) =>
-                  setFormData({ ...formData, studentAddress: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent font-mono text-sm"
-                placeholder="0x..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Institution Name
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.institution}
-                onChange={(e) =>
-                  setFormData({ ...formData, institution: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                placeholder="University of Technology"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Degree / Program
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.degree}
-                  onChange={(e) =>
-                    setFormData({ ...formData, degree: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="Bachelor of Science"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Year of Graduation
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.graduationYear}
-                  onChange={(e) =>
-                    setFormData({ ...formData, graduationYear: e.target.value })
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  placeholder="2024"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Document
-              </label>
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-gray-400 transition-colors">
-                <div className="space-y-1 text-center">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="flex text-sm text-gray-600">
-                    <label
-                      htmlFor="document-upload"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-amber-600 hover:text-amber-500"
-                    >
-                      <span>Upload a file</span>
-                      <input
-                        id="document-upload"
-                        name="document-upload"
-                        type="file"
-                        className="sr-only"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={handleFileChange}
-                        required
-                      />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    PDF, PNG, JPG up to 10MB
-                  </p>
-                  {formData.document && (
-                    <p className="text-sm text-green-600 mt-2">
-                      Selected: {formData.document.name}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
+            <input type="file" onChange={handleFileChange} className="text-gray-400" />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+              className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:bg-yellow-300"
             >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Issuing Credential...
-                </>
-              ) : (
-                'Issue Credential'
-              )}
+              {loading ? 'Issuing...' : 'Issue Credential'}
             </button>
           </form>
         </div>
       )}
 
-      {activeTab === 'students' && walletAddress && (
-        <InstitutionStudents institutionAddress={walletAddress} />
-      )}
-
-      {activeTab === 'register' && (
-        <InstitutionRegistration />
-      )}
+      {activeTab === 'students' && walletAddress && <InstitutionStudents institutionAddress={walletAddress} />}
+      {activeTab === 'register' && <InstitutionRegistration />}
     </div>
   );
 }
