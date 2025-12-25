@@ -1,5 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Wallet, ExternalLink, FileText, Share2, Calendar, Building2, Loader2, History, Box, User } from 'lucide-react';
+import {
+  Wallet,
+  ExternalLink,
+  FileText,
+  Share2,
+  Calendar,
+  Building2,
+  Loader2,
+  History,
+  Box,
+  User
+} from 'lucide-react';
 import { Credential } from '../types/credential';
 import { connectWallet, getStudentCredentials, switchToSepolia } from '../utils/blockchain';
 import { getIPFSUrl } from '../utils/ipfs';
@@ -80,16 +91,18 @@ export default function StudentWallet() {
   if (!walletAddress) {
     return (
       <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-          <Wallet className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Connect Your Wallet</h2>
-          <p className="text-gray-600 mb-6">
+        <div className="bg-[#141414] rounded-lg shadow-lg p-8 text-center border border-[#2A2A2A]">
+          <Wallet className="w-16 h-16 text-[#FFC700] mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Connect Your Wallet
+          </h2>
+          <p className="text-[#BFBFBF] mb-6">
             Connect your MetaMask wallet to view your academic credentials
           </p>
           <button
             onClick={handleConnectWallet}
             disabled={loading}
-            className="bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center mx-auto"
+            className="bg-[#FFC700] text-black py-3 px-6 rounded-lg font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#FFC700] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center mx-auto"
           >
             {loading ? (
               <>
@@ -110,11 +123,15 @@ export default function StudentWallet() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <div className="bg-[#141414] rounded-lg shadow-lg p-6 mb-6 border border-[#2A2A2A]">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Student Portal</h2>
-            <p className="text-sm text-gray-600 font-mono">{walletAddress}</p>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Student Portal
+            </h2>
+            <p className="text-sm text-[#808080] font-mono">
+              {walletAddress}
+            </p>
           </div>
           {activeTab === 'credentials' && (
             <div className="flex items-center space-x-3">
@@ -122,8 +139,8 @@ export default function StudentWallet() {
                 onClick={() => setView3D(!view3D)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center ${
                   view3D
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-[#FFC700] text-black shadow-lg'
+                    : 'bg-[#1A1A1A] text-[#BFBFBF] hover:bg-[#2A2A2A]'
                 }`}
               >
                 <Box className="w-4 h-4 mr-2" />
@@ -131,7 +148,7 @@ export default function StudentWallet() {
               </button>
               <button
                 onClick={() => loadCredentials(walletAddress)}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center"
+                className="text-[#FFC700] hover:opacity-80 font-medium text-sm flex items-center"
               >
                 Refresh
               </button>
@@ -139,13 +156,13 @@ export default function StudentWallet() {
           )}
         </div>
 
-        <div className="flex gap-2 border-b border-gray-200">
+        <div className="flex gap-2 border-b border-[#2A2A2A]">
           <button
             onClick={() => setActiveTab('credentials')}
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === 'credentials'
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-[#FFC700] text-[#FFC700]'
+                : 'text-[#BFBFBF] hover:text-white'
             }`}
           >
             <FileText className="w-4 h-4 inline mr-2" />
@@ -155,8 +172,8 @@ export default function StudentWallet() {
             onClick={() => setActiveTab('profile')}
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === 'profile'
-                ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'border-b-2 border-[#FFC700] text-[#FFC700]'
+                : 'text-[#BFBFBF] hover:text-white'
             }`}
           >
             <User className="w-4 h-4 inline mr-2" />
@@ -169,13 +186,17 @@ export default function StudentWallet() {
         <StudentProfile walletAddress={walletAddress} />
       ) : loading ? (
         <div className="flex justify-center items-center py-12">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#FFC700] animate-spin" />
         </div>
       ) : credentials.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-          <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Credentials Found</h3>
-          <p className="text-gray-600">You don't have any academic credentials yet</p>
+        <div className="bg-[#141414] rounded-lg shadow-lg p-12 text-center border border-[#2A2A2A]">
+          <FileText className="w-16 h-16 text-[#808080] mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">
+            No Credentials Found
+          </h3>
+          <p className="text-[#BFBFBF]">
+            You don't have any academic credentials yet
+          </p>
         </div>
       ) : view3D ? (
         <Credential3DShowcase
@@ -189,33 +210,41 @@ export default function StudentWallet() {
           {credentials.map((credential) => (
             <div
               key={credential.tokenId}
-              className={`bg-white rounded-lg shadow-lg overflow-hidden border-2 transition-all ${
-                credential.revoked ? 'border-red-300 opacity-75' : 'border-transparent hover:shadow-xl'
+              className={`bg-[#141414] rounded-lg shadow-lg overflow-hidden border-2 transition-all ${
+                credential.revoked
+                  ? 'border-red-500 opacity-75'
+                  : 'border-[#2A2A2A] hover:shadow-xl'
               }`}
             >
-              <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-6 text-white">
+              <div className="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] p-6 text-white">
                 <div className="flex items-start justify-between mb-4">
                   <FileText className="w-8 h-8" />
                   {credential.revoked && (
-                    <span className="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                    <span className="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
                       REVOKED
                     </span>
                   )}
                 </div>
-                <h3 className="text-xl font-bold mb-2">{credential.degree}</h3>
-                <div className="flex items-center text-blue-100 text-sm">
+                <h3 className="text-xl font-bold mb-2">
+                  {credential.degree}
+                </h3>
+                <div className="flex items-center text-[#BFBFBF] text-sm">
                   <Building2 className="w-4 h-4 mr-1" />
-                  <span className="truncate">{credential.institution}</span>
+                  <span className="truncate">
+                    {credential.institution}
+                  </span>
                 </div>
               </div>
 
               <div className="p-6">
                 <div className="space-y-3 mb-4">
-                  <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center text-sm text-[#BFBFBF]">
                     <Calendar className="w-4 h-4 mr-2" />
-                    <span>Issued: {formatDate(credential.issueDate)}</span>
+                    <span>
+                      Issued: {formatDate(credential.issueDate)}
+                    </span>
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-[#808080]">
                     Token ID: {credential.tokenId}
                   </div>
                 </div>
@@ -226,24 +255,26 @@ export default function StudentWallet() {
                       href={getIPFSUrl(credential.ipfsHash)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
+                      className="flex-1 bg-[#1A1A1A] text-[#BFBFBF] py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#2A2A2A] transition-colors flex items-center justify-center"
                     >
                       <ExternalLink className="w-4 h-4 mr-1" />
                       View
                     </a>
                     <button
                       onClick={() => setSelectedCredential(credential)}
-                      className="flex-1 bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center justify-center"
+                      className="flex-1 bg-[#FFC700] text-black py-2 px-3 rounded-lg text-sm font-medium hover:opacity-90 transition-colors flex items-center justify-center"
                     >
                       <Share2 className="w-4 h-4 mr-1" />
                       QR
                     </button>
                     <button
                       onClick={() => {
-                        const dbCred = dbCredentials.find(c => c.token_id === credential.tokenId);
+                        const dbCred = dbCredentials.find(
+                          c => c.token_id === credential.tokenId
+                        );
                         if (dbCred) setViewAuditCredential(dbCred.id);
                       }}
-                      className="flex-1 bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors flex items-center justify-center"
+                      className="flex-1 bg-[#1A1A1A] text-[#BFBFBF] py-2 px-3 rounded-lg text-sm font-medium hover:bg-[#2A2A2A] transition-colors flex items-center justify-center"
                     >
                       <History className="w-4 h-4 mr-1" />
                       History
@@ -265,17 +296,17 @@ export default function StudentWallet() {
 
       {shareCredential && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#141414] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#2A2A2A]">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Share Credential</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Share Credential
+                </h2>
                 <button
                   onClick={() => setShareCredential(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[#808080] hover:text-white"
                 >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  ✕
                 </button>
               </div>
               <CredentialSharing
@@ -289,17 +320,17 @@ export default function StudentWallet() {
 
       {viewAuditCredential && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#141414] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#2A2A2A]">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900">Credential History</h2>
+                <h2 className="text-xl font-bold text-white">
+                  Credential History
+                </h2>
                 <button
                   onClick={() => setViewAuditCredential(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-[#808080] hover:text-white"
                 >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  ✕
                 </button>
               </div>
               <AuditTrail credentialId={viewAuditCredential} />
